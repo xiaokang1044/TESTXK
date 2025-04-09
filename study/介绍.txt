@@ -1,0 +1,33 @@
+自我介绍
+
+Hello, my name is Bai xiaokang. I am a development engineer with three years of experience in IT. I have a strong background in ABAP and fiori
+I graduated from hainan University with a degree in Bachelor. Since then, I have worked at Wistron, where I have gained extensive experience in SAP fiori and abap. 
+I am proficient in a variety of tools and technologies, including:
+Programming Languages: ABAP ,Javascript ,java /spring
+Databases: Hana/orical
+Tools & Platforms:SAP GUI/VSCODE/SAP BAS/SAP WEB IDE/tosca
+ I thrive in collaborative environments and enjoy working with cross-functional teams to achieve common goals.
+Outside of work, I enjoy photography.. These activities help me stay balanced job to my professional life.
+Looking ahead, I am excited to continue growing in my career and taking on new challenges. I am particularly interested in FIORI development, and I am eager to contribute  my skills and experience.
+Thank you for taking the time to learn more about me. 
+
+一些问题：
+数据绑定如何实现： 通过绑定ODATA MODEL/JSON MODEL/XML MODEL 当我们去更新model 数据，或者从ui 上面去修改数据的时候也会动态实现实际数据的更改
+常用模型 ： sap.ui.model.odata.v2.ODataModel  sap.ui.model.odata.v4.ODataModel  
+异常捕获：  try catch  然后适用message toast message box
+
+语言修改： i18n -> conponent.js 里面去检查语言 ，然后去选择相应的 i18文件进行渲染   然后view 和 controller 里面都是用i18n的数据进行渲染
+路由：使用sap.ui.core.routing.Router进行路由配置。            在manifest.json文件中定义路由和目标。          使用this.getRouter().navTo("routeName")方法进行导航
+授权验证：使用SAP NetWeaver或SAP BTP的身份验证机制。    在OData服务中配置权限检查。    使用SAP Fiori Launchpad的角色和权限管理。
+文件上传下载： sap.ui.unified.FileUploader   需要重写方法  调用相应的api执行上传
+打印：
+表单校验： 正则表达式  或者系统的其他校验函数逻辑
+性能优化： 1. 减少请求数量，   2. 减少数据量   通过标准行为或者自己模仿标准行为进行分页处理 懒加载   进行数据过滤、    增加数量限制    只抓取需要的栏位
+	batch 请求
+	odata 优化 使用$select参数只获取必要的字段。   使用$filter参数只获取符合条件的数据。   实现分页（$skip和$top）来分批加载数据，避免一次性加载大量数据
+	懒加载 一些还没显示的组件
+如何在SAP Fiori应用中实现单点登录（SSO）？
+配置SAP NetWeaver或SAP BTP的身份验证机制。
+使用SAML、OAuth等协议实现单点登录。
+
+

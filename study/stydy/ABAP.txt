@@ -1,0 +1,511 @@
+ABAP 复习
+1. 数据类型
+	X					1字节	任何字节值(00到FF)														字节字段
+	C					1个字符	1〜65535																	文本域					
+	N(数字文本字段)		1个字符	1〜65535
+	D(类似字符的日期)		8个字符	8个字符
+	T(字符型时间)			6个字符	6个字符
+	I					4字节	-2147483648至2147483647													Integer
+	F					8字节	2.2250738585072014E-308至1.7976931348623157E + 308正或负					浮点
+	P					8字节	[-10 ^(2len -1)+1]到[+ 10 ^(2len -1)1](其中len =固定长度)					打包数量
+	STRING				Variable	任何字母数字字符														文本字符串
+	XSTRING(字节字符串)	Variable	任何字节值(00到FF)
+
+2. 数据定义	声明
+	DATA <f> TYPE <type> VALUE <val>. 
+	<f>  变量名     <type>  数据类型   <val>  数据的值
+		eg:
+			DATA d1(2) TYPE C.  
+			DATA d2 LIKE d1.  
+			DATA minimum_value TYPE I VALUE 10. 
+
+
+3. 常用函数   命令
+	3.1 write 输出变量，输出常量   打印在屏幕    NO-ZERO命令在DATA语句之后。 它抑制包含空格的数字字段的所有前导零。 输出通常更容易让用户阅读。
+		eg:	WRITE W_NUR NO-ZERO.
+
+	3.2 message    MESSAGE命令显示由程序开始处REPORT语句中指定的消息ID定义的消息  
+	
+	3.3 字符处理函数		
+			CONCATENATE 	两个字符串连接形成第三个字符串。
+			CONDENSE 		此语句删除空格字符。	
+			STRLEN 			用于查找字段的长度。
+			REPLACE 		用于以字符进行替换。
+			SEARCH 			在字符串中运行搜索。
+			SHIFT 			用于向左或向右移动字符串的内容。	
+			SPLIT 			用于将字段的内容拆分为两个或多个字段。
+			
+
+4. 程序结构
+	REPORT [Program_Name]. 
+	
+	eg:
+		REPORT  zimr00188 MESSAGE-ID 00
+        LINE-SIZE 300
+        NO STANDARD PAGE HEADING.
+
+		INCLUDE zimr00188top.
+		INCLUDE zimr00188f01.
+		
+
+
+5. 变量类型
+	5.1 Static Variables	
+	
+	5.2 Reference Variables
+	
+	5.3 System Variables
+		eg:
+			WRITE:/'SY-ABCDE', SY-ABCDE,       
+				/'SY-DATUM', SY-DATUM, 
+				/'SY-DBSYS', SY-DBSYS, 
+				/'SY-HOST ', SY-HOST, 
+				/'SY-LANGU', SY-LANGU,
+				/'SY-MANDT', SY-MANDT,
+				/'SY-OPSYS', SY-OPSYS,
+				/'SY-SAPRL', SY-SAPRL,
+				/'SY-SYSID', SY-SYSID,
+				/'SY-TCODE', SY-TCODE,
+				/'SY-UNAME', SY-UNAME,
+				/'SY-UZEIT', SY-UZEIT.
+		result:
+			SY-ABCDE ABCDEFGHIJKLMNOPQRSTUVWXYZ  
+			SY-DATUM 12.09.2015 
+			SY-DBSYS ORACLE                   
+			SY-HOST sapserver 
+			SY-LANGU EN 
+			SY-MANDT 800 
+			SY-OPSYS Windows NT 
+			SY-SAPRL 700 
+			SY-SYSID DMO 
+			SY-TCODE SE38 
+			SY-UNAME SAPUSER 
+			SY-UZEIT 14:25:48
+			
+		系统时间
+			D data type
+			T data type
+			TIMESTAMP (类型P - 长度8无小数)
+			TIMESTAMPL (类型P - 长度11小数7)
+			
+			
+			eg:
+			REPORT YR_SEP_15. 
+			DATA: time_1 TYPE T. 
+				  time_1 = SY-UZEIT. 
+
+			Write /(60) time_1 USING EDIT MASK 
+			'Now the Time is: __:__:__'. 
+			time_1 = time_1 + 75. 
+
+			Write /(60) time_1 USING EDIT MASK 
+			'A Minute and a Quarter from Now, it is: __:__:__'.
+			
+			
+			REPORT YR_SEP_15. 
+			DATA: date_1 TYPE D. 
+
+			date_1 = SY-DATUM. 
+			Write: / 'Present Date is:', date_1 DD/MM/YYYY. 
+
+			date_1 = date_1 + 06. 
+			Write: / 'Date after 6 Days is:', date_1 DD/MM/YYYY.
+			上面的代码产生以下输出:
+
+			Present Date is: 21.09.2015 
+			Date after 6 Days is: 27.09.2015
+			
+			
+			REPORT YR_SEP_12. 
+			DATA: stamp_1 TYPE TIMESTAMP,
+			 
+			stamp_2 TYPE TIMESTAMPL. 
+			GET TIME STAMP FIELD stamp_1. 
+			Write: / 'The short time stamp is:', stamp_1 
+
+			TIME ZONE SY-ZONLO. 
+			GET TIME STAMP FIELD stamp_2. 
+			Write: / 'The long time stamp is:', stamp_2 
+			TIME ZONE SY-ZONLO.
+			上面的代码产生以下输出:
+
+			The short time stamp is: 18.09.2015 11:19:40 
+			The long time stamp is: 18.09.2015 11:19:40,9370000
+6. 字面量和常量
+
+	6.1 当我们尝试更改常量的值时，可能会发生语法或运行时错误。 在类或接口的声明部分中声明的常量属于该类或接口的静态属性。  
+		CONSTANTS <f> TYPE <type> VALUE <val>.   const来定义常量
+		< f > 指定常量的名称。 TYPE< type> 表示常数，其命名为< f > ;,其继承与现有数据类型< type>相同的技术属性。 VALUE< val > 为声明的常量名< f >赋值一个初始值。
+		
+7. 运算符
+	7.1 算术运算符
+	7.2 比较运算符
+	7.3 按位运算符
+	7.4 字符串运算符
+	
+8. 回路   循环 控制
+	8.1 回路
+	WHILE loop     当给定条件为真时，重复一个语句或一组语句。 它在执行循环体之前测试条件。
+	Do loop			DO 语句对于将特定任务重复特定次数很有用。
+	Nested loop		可以在任何另一个 WHILE 或 DO 循环中使用一个或多个循环。
+	
+	8.2 循环控制
+	CONTINUE 		导致循环跳过其身体的剩余部分，并开始下一个循环传递。
+	CHECK			如果条件为假，则在 CHECK 之后的剩余语句被忽略，并且系统开始下一循环通过。
+	EXIT			完全终止循环，并将执行转移到循环后立即执行的语句。
+
+9. 决策
+	两个   if else
+	多个用 case when   
+
+10. 格式化数据
+	wirte 语句的格式
+	WRITE <format> <f> <options>.  < format> 表示输出格式规范，其可以是指示从新行开始的输出的显示的正斜杠(/)。 除了正斜杠之外，格式规范还包括列号和列长度。 例如，WRITE / 04(6)语句显示新行从第4列开始，列长度为6，而WRITE 20语句显示了第20列的当前行。参数< f> 表示数据变量或编号文本
+	描述：
+		LEFT-JUSTIFIED指定输出为左对齐。
+		CENTERED  表示输出居中
+		RIGHT-JUSTIFIED  指定输出为右对齐
+		UNDER< g>  输出直接在字段< g>下启动
+		NO-GAP 指定字段< f>之后的空白 被拒绝
+		USING EDIT MASK <m>表示格式模板< m>的规范。 使用无编辑掩码:这指定禁用在ABAP字典中指定的格式模板
+		
+	链接：https://www.w3cschool.cn/sap_abap/sap_abap_formatting_data.html
+	
+11. 异常处理		可以自己提出异常，然后去抓异常进行回溯 处理
+
+	RAISE - 提出异常，表示发生了一些异常情况。 通常，异常处理程序会尝试修复错误或找到替代解决方案。
+
+	TRY - TRY块包含要处理其异常的应用程序编码。 此语句块按顺序处理。 它可以包含进一步的控制结构和程序调用或其他ABAP程序。 它后面是一个或多个catch块。
+
+	CATCH - 程序在要处理问题的程序中的地方使用异常处理程序捕获异常。 CATCH关键字表示捕获异常。
+
+	CLEANUP - 每当在TRY块中发生异常，而TRY块未被同一TRY - ENDTRY结构的处理程序捕获时，将执行CLEANUP块的语句。 在CLEANUP子句中，系统可以将对象恢复到一致状态或释放外部资源。 也就是说，可以对TRY块的上下文执行清除工作。
+	
+12. 字典？？？
+
+13. 域   domain     SE11
+	三个基本对象是域，数据元素和表        对一些数据类型长度的限制，类似自定义类型
+	域用于表字段的技术定义，例如字段类型和长度，数据元素用于语义定义(简短描述)。 数据元素描述了特定业务环境中的域的含义。 它主要包含字段帮助和屏幕中的字段标签。
+	
+14. 可以通过 SE11 创建数据类型   data type
+
+15. 可以通过SE 11 创建表的类型   然后可以输入相应的参数，对应相应的元素
+
+16.  view   视图 只显示表里的部分元素
+
+17. search help 来创建help   然后去对应到某些表或者视图来实现  相应的功能
+	然后可以通过相应的参数  来实现不同的search help
+
+18. 锁对象🔒   可以创建锁对象，然后   存入功能模块方便之后使用
+
+19. 程序模块化  多些函数调用  不一味串行
+
+20. 子程序
+	将代码封装到一个子程序中。 我们可以在我们的程序中多次调用这个子程序。 可以使用Form和EndForm语句定义子例程。
+	在SE80 来实现子程序的创建
+		FORM <subroutine_name>.
+		  
+		<statements> 
+		  
+		ENDFORM.
+
+
+21. 宏  如果我们想在程序中多次重复使用同一组语句，我们需要将它们包含在宏中。 例如，宏可用于长计算或用于编写复杂的WRITE语句。 我们只能在定义它的程序中使用宏。 宏定义应在程序中使用宏之前发生。
+	类似于函数
+
+	eg:	DEFINE <macro_name>. <statements> 
+		END-OF-DEFINITION. 
+		   ...... 
+		  
+		   <macro_name> [<param1> <param2>....].
+		   
+		REPORT ZMACRO_TEST. 
+			DEFINE mac_test. 
+			WRITE: 'This is Macro &1'. 
+			END-OF-DEFINITION. 
+
+			PARAMETERS: s1 type C as checkbox. 
+			PARAMETERS: s2 type C as checkbox. 
+			PARAMETERS: s3 type C as checkbox default 'X'. 
+
+			START-OF-SELECTION. 
+			IF s1 = 'X'. 
+			   mac_test 1. ENDIF. 
+			IF s2 = 'X'. 
+			   mac_test 2. 
+			ENDIF.
+			 
+			IF s3 = 'X'. 
+			   mac_test 3. 
+			ENDIF.
+			
+22.  功能模块
+	可以独立执行。 SAP系统包含几个可从任何ABAP程序调用的预定义功能模块。
+	
+23.  内部表   
+
+	用来存储临时数据   此当程序的执行终止时，内部表的记录被丢弃。 因此，内部表可以用作临时存储区或临时缓冲区，其中可以根据需要修改数据。 这些表只在运行时而不是在声明时占用内存
+
+	内部表的操作方式与结构相同，主要区别是结构只有一行，而内部表可以有所需的行。 可以使用内部表中的行和列来访问和修改数据。
+	
+	23.1 分类
+		标准表，表类型为关键字​STANDARD TABLE
+		排序表，表类型关键字为​SORTED TABLE
+		哈希表，表类型关键字为​HASHED TABLE
+	
+	23.2 创建内表   OCCURS告诉SAP正在创建一个内部表
+	
+	使用TYPES语句创建内部表作为本地数据类型(仅在当前程序的上下文中使用的数据类型) 此语句使用TYPE或LIKE子句来引用现有表。创建内部表作为本地数据类型的语法是:
+		REPORT ZINTERNAL_DEMO. 
+		TYPES: BEGIN OF CustomerLine, 
+		Cust_ID TYPE C, 
+		Cust_Name(20) TYPE C, 
+		END OF CustomerLine. 
+		 
+		TYPES mytable TYPE SORTED TABLE OF CustomerLine  
+		WITH UNIQUE KEY Cust_ID. 
+		WRITE:/'The mytable is an Internal Table'. 
+	
+	最初给内部表中的字段名称与其他地方创建的其他字段相同的名称很有用。 最后，使用“END OF< internal_tab＆gt ;."声明内部表的结尾，如下面的代码所示:
+		DATA: BEGIN OF <internal_tab> Occurs 0,
+	23.3  填充内部表
+	INSERT语句用于将单个行或一组行插入内部表。
+	会让在插入的位置的后面的索引都++ 
+	
+	itable1-F1 = -96.  
+	INSERT itable1 INDEX 2.  
+	
+	APPEND语句用于向现有内部表添加单个行或行。 此语句从工作区复制单个行，并将其插入内部表中的最后一个现有行之后。
+	eg:
+		REPORT  ZCUSLIST1. 
+		DATA: BEGIN OF linv Occurs 0,
+			  Name(20) TYPE C,
+			  ID_Number TYPE I,
+		END OF linv. 
+
+		DATA table1 LIKE TABLE OF linv. 
+		linv-Name = 'Melissa'. 
+		linv-ID_Number = 105467. 
+		APPEND linv TO table1. 
+		LOOP AT table1 INTO linv. 
+
+		Write: / linv-name, linv-ID_Number. 
+		ENDLOOP.
+	
+	23.4 复制内部表		使用SELECT语句从表中选择所有记录，然后使用MOVE语句将记录从原始表移动到新的内部表中到名称对应的字段
+	MOVE <table_field> TO <internal_tab_field>.
+	普通move  得对应列名
+	eg1:
+		REPORT  ZCUSLIST1. 
+		TABLES: ZCUSTOMERS1. 
+		DATA: BEGIN OF itab01 Occurs 0,
+			  name LIKE ZCUSTOMERS1-name,
+			  dob LIKE ZCUSTOMERS1-dob, 
+		END OF itab01. 
+
+		Select * FROM ZCUSTOMERS1. 
+		MOVE ZCUSTOMERS1-name TO itab01-name. 
+		MOVE ZCUSTOMERS1-dob TO itab01-dob. 
+		ENDSELECT.
+		 
+		Write: / itab01-name, itab01-dob.
+	
+	自动匹配到相应的栏位
+	eg2:
+		REPORT  ZCUSTOMERLIST. 
+		TABLES: ZCUSTOMERS1. 
+		DATA: Begin of itab01 occurs 0,
+			  customer LIKE ZCUSTOMERS1-customer,
+			  name LIKE ZCUSTOMERS1-name,
+			  title LIKE ZCUSTOMERS1-title,
+			  dob LIKE ZCUSTOMERS1-dob, 
+		END OF itab01. 
+
+		SELECT * from ZCUSTOMERS1. 
+		MOVE-Corresponding ZCUSTOMERS1 TO itab01. 
+		APPEND itab01. 
+		ENDSELECT. 
+		LOOP AT itab01. 
+		Write: / itab01-name, itab01-dob. 
+		ENDLOOP. 
+	需要确保两个字段都具有匹配的数据类型和长度。 它已经在这里用LIKE语句以前完成。
+	
+	23.5  读取内部表
+	READ TABLE <internal_table> WITH KEY = <internal_tab_field>.
+	READ TABLE <internal_table> <key> INTO <work_area_itab>[COMPARING <F1> <F2>...<Fn>].
+	
+	23.6 删除内部表
+	删除某行 或者某个表
+	DELETE TABLE <internal_table> FROM <work_area_itab>.
+	按某个键值来删除
+	DELETE TABLE <internal_table> WITH TABLE KEY <K1> = <F1>………… <Kn> = <Fn>.
+	
+24.   结构？   内表？   内部表？  
+
+	区别    用法   定义方法  
+	
+	
+25. ABAP对象
+	特点：	1、有一个状态。
+			2、有独特的身份。
+			3、可能或可能不显示行为。
+	引用类创建引用变量。 其语法是 -
+		DATA: <object_name> TYPE REF TO <class_name>.
+	从引用变量创建对象。 其语法是 -
+		CREATE Object: <object_name>.
+	
+	
+	eg:
+		REPORT ZDEMO_OBJECT. 
+		CLASS Class1 Definition. 
+		Public Section. 
+		DATA: text1(45) VALUE 'ABAP Objects.'. 
+		METHODS: Display1. 
+		ENDCLASS. 
+
+		CLASS Class1 Implementation. 
+		METHOD Display1. 
+		Write:/ 'This is the Display method.'. 
+		ENDMETHOD. 
+		ENDCLASS. 
+
+		START-OF-SELECTION. 
+		DATA: Class1 TYPE REF TO Class1. 
+		CREATE Object: Class1. 
+		Write:/ Class1->text1. 
+		CALL METHOD: Class1->Display1.
+		
+26 类
+	26.1 类定义
+		CLASS <class_name> DEFINITION. 
+		
+	26.2 类实现
+		CLASS <class_name> IMPLEMENTATION. 
+		
+	26.3 属性
+	
+		eg:
+			Report ZAccess1. 
+			CLASS class1 Definition.
+			   PUBLIC Section.
+				  Data: text1 Type char25 Value 'Public Data'.
+				  Methods meth1.
+					
+			   PROTECTED Section.
+				  Data: text2 Type char25 Value 'Protected Data'.
+					
+			   PRIVATE Section.     
+				  Data: text3 Type char25 Value 'Private Data'. 
+			ENDCLASS.
+			 
+			CLASS class1 Implementation.   
+			   Method meth1.     
+				  Write: / 'Public Method:',   
+						 / text1,
+						 / text2,
+						 / text3.
+				  Skip.
+			   EndMethod.
+			ENDCLASS. 
+
+			Start-Of-Selection.   
+			   Data: Objectx Type Ref To class1.
+			   Create Object: Objectx.
+			   CALL Method: Objectx→meth1.
+			   Write: / Objectx→text1.
+	26.4 静态属性   和java静态类似
+		eg:	
+			Report ZStatic1. 
+			CLASS class1 Definition.   
+			   PUBLIC Section.
+				  CLASS-DATA: name1 Type char45,
+							  data1 Type I.
+			   Methods: meth1. 
+			ENDCLASS. 
+
+			CLASS class1 Implementation.   
+			   Method meth1.
+				  Do 4 Times.
+					 data1 = 1 + data1.
+					 Write: / data1, name1.
+				  EndDo.
+				  Skip.
+			   EndMethod. 
+			ENDCLASS. 
+
+			Start-Of-Selection. 
+			   class1⇒name1 = 'ABAP Object Oriented Programming'.
+			   class1⇒data1 = 0.
+			   Data: Object1 Type Ref To class1,
+					 Object2 Type Ref To class1.
+						
+			   Create Object: Object1, Object2.
+			   CALL Method: Object1→meth1, 
+							Object2→meth1.
+	26.5 构造函数
+		CLASS class1 Implementation.
+		   Method method1.
+			  Write: / 'This is Method1'.
+		   EndMethod.
+			
+		   Method constructor.
+			  Write: / 'Constructor Triggered'.
+		   EndMethod. 
+		ENDCLASS. 
+		
+	26.6 ME操作员
+		会反映初始的 函数
+		
+27 继承   和java类似
+	特点：一个类的对象可以获取另一个类的属性。
+
+		派生类继承超类的数据和方法。 但是，他们可以覆盖方法，并添加新的方法。
+
+		继承的主要优点是可重用性。
+	
+	eg:
+		Report ZINHERITAN_1. 
+		CLASS Parent Definition. 
+		PUBLIC Section. 
+		Data: w_public(25) Value 'This is public data'. 
+		Methods: ParentM. 
+		ENDCLASS. 
+
+		CLASS Child Definition Inheriting From Parent. 
+		PUBLIC Section. 
+		Methods: ChildM. 
+		ENDCLASS. 
+
+		CLASS Parent Implementation. 
+		Method ParentM. 
+		Write /: w_public. 
+		EndMethod. ENDCLASS. 
+
+		CLASS Child Implementation. 
+		Method ChildM. 
+		Skip. 
+		Write /: 'Method in child class', w_public.
+		EndMethod. 
+		ENDCLASS. 
+
+		Start-of-selection. 
+		Data: Parent Type Ref To Parent, 
+		Child Type Ref To Child. 
+		Create Object: Parent, Child. 
+		Call Method: Parent→ParentM, 
+		child→ChildM.
+		
+28. 注释
+	28.1 函数注释  
+		    /**
+			 * 把xml转成JSONObject
+			 *
+			 * @param xml xml数据
+			 * @return 转换后的JSONObject数据
+			 */
+			 
+	28.2 
+		
+					
+	
+	

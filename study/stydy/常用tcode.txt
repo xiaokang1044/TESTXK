@@ -1,0 +1,16 @@
+用过的
+
+se16    对表的操作
+se11   dictionary
+sm30   显示表结构  维护表记录（如果开启maitaince的话）
+se38    编写程序代码
+se80    关于程序里面的内容  有他的guistatus  还有f1  top等等
+se37   更改function module
+sm36   JOB 执行
+
+sbwp   查看输入输出邮件内容
+shdb进行bdc的记录   来输入表
+
+
+
+

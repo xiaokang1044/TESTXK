@@ -1,0 +1,24 @@
+{
+	"_version": "1.27.0",
+	"_generator": "cpkg-project-template",
+	"sap.artifact": {
+		"id": "card.explorer.simple.calendar.card",
+		"type": "card",
+		"title": "Sample of a List with Highlight",
+		"subTitle": "Sample of a Calendar with Highlight",
+		"shortTitle": "A short title for this Card",
+		"info": "Additional information about this Card",
+		"description": "A long description for this Card",
+		"tags": {
+			"keywords": [
+				"Calendar",
+				"Highlight",
+				"Card",
+				"Sample"
+			]
+		},
+		"artifactVersion": {
+			"version": "1.0.0"
+		}
+	}
+}
